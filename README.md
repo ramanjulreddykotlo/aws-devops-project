@@ -1,1 +1,1 @@
-## This Repository is for aws devops proejct 
+## This Repository is for aws devops project
