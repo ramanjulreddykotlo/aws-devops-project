@@ -1,0 +1,81 @@
+{
+    "pipeline": {
+        "name": "simple-python-app",
+        "roleArn": "arn:aws:iam::502569003766:role/service-role/codepipeline-role",
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "ThirdParty",
+                            "provider": "GitHub",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "Branch": "main",
+                            "OAuthToken": "****",
+                            "Owner": "ramanjulreddykotlo",
+                            "PollForSourceChanges": "false",
+                            "Repo": "aws-devops-project"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [],
+                        "region": "us-east-1",
+                        "namespace": "SourceVariables"
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "Build",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "BatchEnabled": "false",
+                            "ProjectName": "aws-devops-project"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [],
+                        "region": "us-east-1",
+                        "namespace": "BuildVariables"
+                    }
+                ]
+            },
+            {
+                "name": "Deploy",
+                "actions": [
+                    {
+                        "name": "Deploy",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CodeDeploy",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ApplicationName": "python-app",
+                            "DeploymentGroupName": "simple-python-app"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [],
+                        "region": "us-east-1",
+                        "namespace": "DeployVariables"
+                    }
+                ]
+            }
+        ],
+        "version": 2
+    }
+}

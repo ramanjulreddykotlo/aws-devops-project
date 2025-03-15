@@ -1,0 +1,111 @@
+{
+    "pipeline": {
+        "name": "simple-python-app",
+        "roleArn": "arn:aws:iam::502569003766:role/service-role/codepipeline-role",
+        "artifactStore": {
+            "type": "S3",
+            "location": "codepipeline-us-east-1-602138696255"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "ThirdParty",
+                            "provider": "GitHub",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "Branch": "main",
+                            "OAuthToken": "****",
+                            "Owner": "ramanjulreddykotlo",
+                            "PollForSourceChanges": "false",
+                            "Repo": "aws-devops-project"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "region": "us-east-1",
+                        "namespace": "SourceVariables"
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "Build",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "BatchEnabled": "false",
+                            "ProjectName": "aws-devops-project"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "BuildArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "region": "us-east-1",
+                        "namespace": "BuildVariables"
+                    }
+                ]
+            },
+            {
+                "name": "Deploy",
+                "actions": [
+                    {
+                        "name": "Deploy",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CodeDeploy",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ApplicationName": "python-app",
+                            "DeploymentGroupName": "simple-python-app"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "BuildArtifact"
+                            }
+                        ],
+                        "region": "us-east-1",
+                        "namespace": "DeployVariables"
+                    }
+                ],
+                "onFailure": {
+                    "result": "ROLLBACK"
+                }
+            }
+        ],
+        "version": 2,
+        "executionMode": "QUEUED",
+        "pipelineType": "V2"
+    },
+    "metadata": {
+        "pipelineArn": "arn:aws:codepipeline:us-east-1:502569003766:simple-python-app",
+        "created": "2025-03-10T12:35:24.877000-04:00",
+        "updated": "2025-03-10T13:37:55.792000-04:00"
+    }
+}
