@@ -28,3 +28,6 @@ artifacts:
   files:
     - '**/*'
   base-directory: ../simple-python-app
+  discard-paths: yes
+  name: "artifact.zip"
+  location: "s3://codepipeline-us-east-1-602138696255/simple-python-app/"
